@@ -1,101 +1,156 @@
-import Image from "next/image";
+import Link from 'next/link';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { APP_ROUTES } from '@/lib/constants';
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="min-h-screen">
+      {/* Hero Section */}
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary-500/10 via-transparent to-transparent"></div>
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32 relative">
+          <div className="max-w-3xl">
+            <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
+              Master Java & Spring
+              <span className="block text-primary-500">Without Exceptions</span>
+            </h1>
+            <p className="text-xl text-dark-muted mb-8">
+              Free comprehensive courses for Java developers. Learn Spring Boot, Microservices, and modern Java technologies.
+            </p>
+            <div className="flex flex-wrap gap-4">
+              <Link href={APP_ROUTES.REGISTER}>
+                <Button size="lg" variant="primary">
+                  Get Started Free
+                </Button>
+              </Link>
+              <Link href="/courses">
+                <Button size="lg" variant="outline">
+                  Browse Courses
+                </Button>
+              </Link>
+            </div>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </section>
+
+      {/* Featured Courses */}
+      <section className="py-20 bg-dark-bg">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              Popular Courses
+            </h2>
+            <p className="text-dark-muted">
+              Start your learning journey with our most popular courses
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Course Card 1 */}
+            <Card hover>
+              <div className="aspect-video bg-gradient-to-br from-primary-500/20 to-transparent rounded-lg mb-4 flex items-center justify-center">
+                <span className="text-6xl">☕</span>
+              </div>
+              <h3 className="text-xl font-semibold text-white mb-2">
+                The Complete Java Spring Boot Course
+              </h3>
+              <p className="text-dark-muted text-sm mb-4">John Doe</p>
+              <div className="flex items-center justify-between">
+                <span className="text-primary-500 font-semibold">Free</span>
+                <div className="flex items-center text-yellow-500">
+                  ⭐ 4.8 <span className="text-dark-muted ml-1">(1,234)</span>
+                </div>
+              </div>
+            </Card>
+
+            {/* Course Card 2 */}
+            <Card hover>
+              <div className="aspect-video bg-gradient-to-br from-blue-500/20 to-transparent rounded-lg mb-4 flex items-center justify-center">
+                <span className="text-6xl">🔧</span>
+              </div>
+              <h3 className="text-xl font-semibold text-white mb-2">
+                Microservices Architecture Patterns
+              </h3>
+              <p className="text-dark-muted text-sm mb-4">Jane Smith</p>
+              <div className="flex items-center justify-between">
+                <span className="text-primary-500 font-semibold">Free</span>
+                <div className="flex items-center text-yellow-500">
+                  ⭐ 4.9 <span className="text-dark-muted ml-1">(892)</span>
+                </div>
+              </div>
+            </Card>
+
+            {/* Course Card 3 */}
+            <Card hover>
+              <div className="aspect-video bg-gradient-to-br from-purple-500/20 to-transparent rounded-lg mb-4 flex items-center justify-center">
+                <span className="text-6xl">🚀</span>
+              </div>
+              <h3 className="text-xl font-semibold text-white mb-2">
+                Advanced SQL for Data Scientists
+              </h3>
+              <p className="text-dark-muted text-sm mb-4">Peter Jones</p>
+              <div className="flex items-center justify-between">
+                <span className="text-primary-500 font-semibold">Free</span>
+                <div className="flex items-center text-yellow-500">
+                  ⭐ 4.7 <span className="text-dark-muted ml-1">(2,156)</span>
+                </div>
+              </div>
+            </Card>
+          </div>
+
+          <div className="text-center mt-12">
+            <Link href="/courses">
+              <Button variant="outline" size="lg">
+                View All Courses
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="py-20 border-y border-dark-border">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            <div>
+              <div className="text-4xl font-bold text-primary-500 mb-2">50+</div>
+              <div className="text-dark-muted">Courses</div>
+            </div>
+            <div>
+              <div className="text-4xl font-bold text-primary-500 mb-2">10K+</div>
+              <div className="text-dark-muted">Students</div>
+            </div>
+            <div>
+              <div className="text-4xl font-bold text-primary-500 mb-2">100%</div>
+              <div className="text-dark-muted">Free</div>
+            </div>
+            <div>
+              <div className="text-4xl font-bold text-primary-500 mb-2">4.8★</div>
+              <div className="text-dark-muted">Rating</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <Card className="text-center max-w-3xl mx-auto bg-gradient-to-br from-primary-500/10 to-transparent border-primary-500/30">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              Ready to Start Learning?
+            </h2>
+            <p className="text-dark-muted mb-8 text-lg">
+              Join thousands of Java developers mastering their skills with NullPointer
+            </p>
+            <Link href={APP_ROUTES.REGISTER}>
+              <Button size="lg" variant="primary">
+                Create Free Account
+              </Button>
+            </Link>
+          </Card>
+        </div>
+      </section>
     </div>
   );
 }
