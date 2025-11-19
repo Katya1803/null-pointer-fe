@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useAuthStore } from "@/lib/store/auth-store";
 import { authService } from "@/lib/services/auth.service";
 import { getErrorMessage } from "@/lib/utils/error.utils";
+import { Avatar } from "@/components/ui/Avatar";
 
 export function Header() {
   const router = useRouter();
@@ -19,10 +20,8 @@ export function Header() {
     try {
       await authService.logout();
     } catch (error) {
-      // Log error nhưng vẫn logout locally
       console.warn("Backend logout failed:", getErrorMessage(error));
     } finally {
-      // ALWAYS clear local session
       logout();
       setIsLoggingOut(false);
       setShowDropdown(false);
@@ -34,12 +33,10 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b border-dark-border bg-dark-card/95 backdrop-blur">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
             <span className="text-2xl font-bold text-primary-500">NullPointer</span>
           </Link>
 
-          {/* Navigation */}
           <nav className="hidden md:flex items-center gap-6">
             <Link
               href="/blogs"
@@ -55,7 +52,6 @@ export function Header() {
             </Link>
           </nav>
 
-          {/* Search */}
           <div className="hidden lg:flex flex-1 max-w-md mx-8">
             <input
               type="text"
@@ -64,15 +60,14 @@ export function Header() {
             />
           </div>
 
-          {/* Auth */}
           <div className="flex items-center gap-4">
             {user ? (
               <div className="relative">
                 <button
                   onClick={() => setShowDropdown(!showDropdown)}
-                  className="flex items-center gap-2 px-4 py-2 bg-dark-bg border border-dark-border rounded-lg hover:border-primary-500 transition-colors"
+                  className="flex items-center gap-2 hover:opacity-80 transition-opacity"
                 >
-                  <span className="text-dark-text">{user.username}</span>
+                  <Avatar avatarUrl={null} username={user.username} size="md" />
                 </button>
 
                 {showDropdown && (

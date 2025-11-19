@@ -1,21 +1,16 @@
-/**
- * User Request Types
- */
 export interface UpdateUserRequest {
   username?: string;
   email?: string;
 }
 
 export interface UpdateUserProfileRequest {
-  fullName?: string;
+  firstName?: string;
+  lastName?: string;
   bio?: string;
-  avatar?: string;
-  phoneNumber?: string;
+  avatarUrl?: string;
+  phone?: string;
 }
 
-/**
- * User Response Types
- */
 export interface UserResponse {
   id: string;
   accountId: string;
@@ -28,18 +23,13 @@ export interface UserResponse {
 
 export interface UserProfileResponse {
   id: string;
-  userId: string;
-  fullName?: string;
+  firstName?: string;
+  lastName?: string;
   bio?: string;
-  avatar?: string;
-  phoneNumber?: string;
-  createdAt: string;
-  updatedAt: string;
+  avatarUrl?: string;
+  phone?: string;
 }
 
-/**
- * Pagination Response
- */
 export interface PageResponse<T> {
   content: T[];
   page: number;
