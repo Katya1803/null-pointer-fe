@@ -1,13 +1,11 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { usePathname } from "next/navigation";
 import { useAuthStore } from "@/lib/store/auth-store";
 import { api, setupInterceptors } from "@/lib/api";
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
-  const { setAuth, logout, isInitialized, setInitialized } = useAuthStore();
+  const { accessToken, user, setAuth, isInitialized, setInitialized } = useAuthStore();
   const hasSetupInterceptors = useRef(false);
 
   useEffect(() => {
@@ -24,11 +22,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Try to restore session on initial load
     const restoreSession = async () => {
       try {
+        // If we have accessToken and user in localStorage (from persist), 
+        // we can skip the refresh call and just mark as initialized
+        if (accessToken && user) {
+          console.log('Session restored from localStorage');
+          setInitialized();
+          return;
+        }
+
+        // No session in localStorage, try to refresh from cookie
+        console.log('No localStorage session, trying refresh from cookie...');
         const { data } = await api.post('/auth/refresh');
         setAuth(data.data.accessToken, data.data.user);
+        console.log('Session restored from refresh token');
       } catch (error) {
         // No active session - that's okay
-        console.log('No active session');
+        console.log('No active session to restore');
       } finally {
         setInitialized();
       }
@@ -37,7 +46,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (!isInitialized) {
       restoreSession();
     }
-  }, [isInitialized, setAuth, setInitialized]);
+  }, [isInitialized, accessToken, user, setAuth, setInitialized]);
 
   // Show loading on initial auth check
   if (!isInitialized) {
