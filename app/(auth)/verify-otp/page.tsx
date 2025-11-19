@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
-import { verifyOtpSchema, type VerifyOtpFormData } from "@/lib/validations/auth";
+import { verifyOtpSchema, type VerifyOtpFormData } from "@/lib/validations/auth.validations";
 import { authService } from "@/lib/services/auth.service";
 import { useAuthStore } from "@/lib/store/auth-store";
 

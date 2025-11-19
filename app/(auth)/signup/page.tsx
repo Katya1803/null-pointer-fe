@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { registerSchema, type RegisterFormData } from "@/lib/validations/auth";
+import { registerSchema, type RegisterFormData } from "@/lib/validations/auth.validations";
 import { authService } from "@/lib/services/auth.service";
 
 export default function SignupPage() {

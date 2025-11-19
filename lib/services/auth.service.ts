@@ -1,19 +1,19 @@
 import { api } from '../api';
-import {
+import type {
   LoginFormData,
   RegisterFormData,
   VerifyOtpFormData,
   ResendOtpFormData,
-} from '../validations/auth';
+} from '../validations/auth.validations';
 
-interface ApiResponse<T> {
+export interface ApiResponse<T> {
   success: boolean;
   message?: string;
   data: T;
   timestamp: string;
 }
 
-interface RegisterResponse {
+export interface RegisterResponse {
   id: string;
   username: string;
   email: string;
@@ -21,7 +21,7 @@ interface RegisterResponse {
   message: string;
 }
 
-interface LoginResponse {
+export interface LoginResponse {
   accessToken: string;
   refreshToken: null;
   tokenType: string;
@@ -41,12 +41,18 @@ export const authService = {
   },
 
   async login(data: LoginFormData): Promise<ApiResponse<LoginResponse>> {
-    const response = await api.post('/auth/login', data);
+    const response = await api.post('/auth/login', {
+      ...data,
+      deviceId: data.deviceId || 'web',
+    });
     return response.data;
   },
 
   async verifyOtp(data: VerifyOtpFormData): Promise<ApiResponse<LoginResponse>> {
-    const response = await api.post('/auth/verify-otp', data);
+    const response = await api.post('/auth/verify-otp', {
+      ...data,
+      deviceId: data.deviceId || 'web',
+    });
     return response.data;
   },
 
@@ -57,5 +63,10 @@ export const authService = {
 
   async logout(): Promise<void> {
     await api.post('/auth/logout');
+  },
+
+  async refreshToken(): Promise<ApiResponse<LoginResponse>> {
+    const response = await api.post('/auth/refresh');
+    return response.data;
   },
 };

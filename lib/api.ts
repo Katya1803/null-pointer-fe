@@ -1,38 +1,89 @@
-import axios from 'axios';
+import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
 
 export const api = axios.create({
   baseURL: API_URL,
-  withCredentials: true,
+  withCredentials: true, // Important for httpOnly cookies
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// Request interceptor - attach access token from store
-api.interceptors.request.use(
-  (config) => {
-    const token = useAuthStore.getState().accessToken;
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+// Flag to prevent multiple refresh attempts
+let isRefreshing = false;
+let failedQueue: Array<{
+  resolve: (value?: any) => void;
+  reject: (error?: any) => void;
+}> = [];
+
+const processQueue = (error: any = null) => {
+  failedQueue.forEach((prom) => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve();
     }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
+  });
+  failedQueue = [];
+};
 
-// Response interceptor - handle token refresh
-api.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
+// We'll setup interceptors from AuthProvider to avoid circular dependency
+export const setupInterceptors = (
+  getAccessToken: () => string | null,
+  setAccessToken: (token: string) => void,
+  logout: () => void
+) => {
+  // Request interceptor - attach access token
+  api.interceptors.request.use(
+    (config: InternalAxiosRequestConfig) => {
+      const token = getAccessToken();
+      if (token && config.headers) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+      return config;
+    },
+    (error) => Promise.reject(error)
+  );
 
-    // If 401 and not already retried
-    if (error.response?.status === 401 && !originalRequest._retry) {
+  // Response interceptor - handle 401 and refresh token
+  api.interceptors.response.use(
+    (response) => response,
+    async (error: AxiosError) => {
+      const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
+
+      // If error is not 401 or no config, reject immediately
+      if (!originalRequest || error.response?.status !== 401) {
+        return Promise.reject(error);
+      }
+
+      // If already retried, logout and redirect
+      if (originalRequest._retry) {
+        logout();
+        if (typeof window !== 'undefined') {
+          window.location.href = '/login';
+        }
+        return Promise.reject(error);
+      }
+
+      // If currently refreshing, queue the request
+      if (isRefreshing) {
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        })
+          .then(() => {
+            return api(originalRequest);
+          })
+          .catch((err) => {
+            return Promise.reject(err);
+          });
+      }
+
       originalRequest._retry = true;
+      isRefreshing = true;
 
       try {
+        // Attempt to refresh token
         const { data } = await axios.post(
           `${API_URL}/auth/refresh`,
           {},
@@ -40,20 +91,26 @@ api.interceptors.response.use(
         );
 
         const newAccessToken = data.data.accessToken;
-        useAuthStore.getState().setAccessToken(newAccessToken);
+        setAccessToken(newAccessToken);
 
-        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+        // Update failed queued requests
+        processQueue();
+        isRefreshing = false;
+
+        // Retry original request with new token
+        if (originalRequest.headers) {
+          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+        }
         return api(originalRequest);
       } catch (refreshError) {
-        useAuthStore.getState().logout();
-        window.location.href = '/login';
+        processQueue(refreshError);
+        isRefreshing = false;
+        logout();
+        if (typeof window !== 'undefined') {
+          window.location.href = '/login';
+        }
         return Promise.reject(refreshError);
       }
     }
-
-    return Promise.reject(error);
-  }
-);
-
-// Import will be moved below after store is defined
-import { useAuthStore } from './store/auth-store';
+  );
+};

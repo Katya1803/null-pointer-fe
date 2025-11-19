@@ -5,13 +5,14 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { loginSchema, type LoginFormData } from "@/lib/validations/auth";
+import { loginSchema, type LoginFormData } from "@/lib/validations/auth.validations";
 import { authService } from "@/lib/services/auth.service";
 import { useAuthStore } from "@/lib/store/auth-store";
+import { AxiosError } from "axios";
 
 export default function LoginPage() {
   const router = useRouter();
-  const { setAccessToken, setUser } = useAuthStore();
+  const { setAuth } = useAuthStore();
   const [error, setError] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -21,9 +22,6 @@ export default function LoginPage() {
     formState: { errors },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
-    defaultValues: {
-      deviceId: "web",
-    },
   });
 
   const onSubmit = async (data: LoginFormData) => {
@@ -32,13 +30,13 @@ export default function LoginPage() {
       setError("");
 
       const response = await authService.login(data);
-
-      setAccessToken(response.data.accessToken);
-      setUser(response.data.user);
+      setAuth(response.data.accessToken, response.data.user);
 
       router.push("/");
-    } catch (err: any) {
-      const errorMessage = err.response?.data?.message || "Login failed. Please try again.";
+    } catch (err) {
+      const axiosError = err as AxiosError<{ message?: string }>;
+      const errorMessage =
+        axiosError.response?.data?.message || "Login failed. Please try again.";
       setError(errorMessage);
     } finally {
       setIsLoading(false);
@@ -69,6 +67,7 @@ export default function LoginPage() {
               type="text"
               className="w-full px-4 py-3 bg-dark-bg border border-dark-border rounded-lg text-dark-text placeholder:text-dark-muted focus:outline-none focus:border-primary-500"
               placeholder="Enter username or email"
+              disabled={isLoading}
             />
             {errors.account && (
               <p className="mt-1 text-sm text-red-500">{errors.account.message}</p>
@@ -76,14 +75,13 @@ export default function LoginPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-dark-text mb-2">
-              Password
-            </label>
+            <label className="block text-sm font-medium text-dark-text mb-2">Password</label>
             <input
               {...register("password")}
               type="password"
               className="w-full px-4 py-3 bg-dark-bg border border-dark-border rounded-lg text-dark-text placeholder:text-dark-muted focus:outline-none focus:border-primary-500"
               placeholder="Enter password"
+              disabled={isLoading}
             />
             {errors.password && (
               <p className="mt-1 text-sm text-red-500">{errors.password.message}</p>
