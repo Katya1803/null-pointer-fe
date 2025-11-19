@@ -109,31 +109,28 @@ export default function UserManagementPage() {
             <div className="bg-dark-card border border-dark-border rounded-lg p-4">
               <button
                 onClick={() => setActiveTab('profile')}
-                className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
-                  activeTab === 'profile'
+                className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${activeTab === 'profile'
                     ? 'bg-primary-500 text-white'
                     : 'text-dark-text hover:bg-dark-bg'
-                }`}
+                  }`}
               >
                 Profile
               </button>
               <button
                 onClick={() => setActiveTab('blogs')}
-                className={`w-full text-left px-4 py-2 rounded-lg transition-colors mt-2 ${
-                  activeTab === 'blogs'
+                className={`w-full text-left px-4 py-2 rounded-lg transition-colors mt-2 ${activeTab === 'blogs'
                     ? 'bg-primary-500 text-white'
                     : 'text-dark-text hover:bg-dark-bg'
-                }`}
+                  }`}
               >
                 Blogs
               </button>
               <button
                 onClick={() => setActiveTab('community')}
-                className={`w-full text-left px-4 py-2 rounded-lg transition-colors mt-2 ${
-                  activeTab === 'community'
+                className={`w-full text-left px-4 py-2 rounded-lg transition-colors mt-2 ${activeTab === 'community'
                     ? 'bg-primary-500 text-white'
                     : 'text-dark-text hover:bg-dark-bg'
-                }`}
+                  }`}
               >
                 Community
               </button>
@@ -200,33 +197,37 @@ export default function UserManagementPage() {
                       <p className="text-xs text-dark-muted mt-1">Email cannot be changed</p>
                     </div>
 
-                    {/* First Name */}
-                    <div>
-                      <label className="block text-sm font-medium text-dark-text mb-2">
-                        First Name
-                      </label>
-                      <input
-                        type="text"
-                        value={formData.firstName}
-                        onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                        className="w-full px-4 py-2 bg-dark-bg border border-dark-border rounded-lg text-dark-text focus:outline-none focus:border-primary-500"
-                        placeholder="Enter your first name"
-                      />
+                    {/* Name Row */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {/* First Name */}
+                      <div>
+                        <label className="block text-sm font-medium text-dark-text mb-2">
+                          First Name
+                        </label>
+                        <input
+                          type="text"
+                          value={formData.firstName}
+                          onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                          className="w-full px-4 py-2 bg-dark-bg border border-dark-border rounded-lg text-dark-text focus:outline-none focus:border-primary-500"
+                          placeholder="Enter your first name"
+                        />
+                      </div>
+
+                      {/* Last Name */}
+                      <div>
+                        <label className="block text-sm font-medium text-dark-text mb-2">
+                          Last Name
+                        </label>
+                        <input
+                          type="text"
+                          value={formData.lastName}
+                          onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                          className="w-full px-4 py-2 bg-dark-bg border border-dark-border rounded-lg text-dark-text focus:outline-none focus:border-primary-500"
+                          placeholder="Enter your last name"
+                        />
+                      </div>
                     </div>
 
-                    {/* Last Name */}
-                    <div>
-                      <label className="block text-sm font-medium text-dark-text mb-2">
-                        Last Name
-                      </label>
-                      <input
-                        type="text"
-                        value={formData.lastName}
-                        onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                        className="w-full px-4 py-2 bg-dark-bg border border-dark-border rounded-lg text-dark-text focus:outline-none focus:border-primary-500"
-                        placeholder="Enter your last name"
-                      />
-                    </div>
 
                     {/* Phone */}
                     <div>

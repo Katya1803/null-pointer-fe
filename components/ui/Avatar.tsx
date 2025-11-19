@@ -28,7 +28,7 @@ export function Avatar({ avatarUrl, username, size = 'md' }: AvatarProps) {
 
   return (
     <div
-      className={`${sizeClasses[size]} rounded-full bg-primary-500 flex items-center justify-center text-white font-semibold`}
+      className={`${sizeClasses[size]} rounded-full bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center text-white font-semibold shadow-lg`}
     >
       {getInitial(username)}
     </div>
