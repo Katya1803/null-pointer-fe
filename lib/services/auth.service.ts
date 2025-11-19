@@ -1,4 +1,5 @@
 import { api } from '../api';
+import { useAuthStore } from '../store/auth-store';
 import type {
   LoginFormData,
   RegisterFormData,
@@ -22,10 +23,10 @@ export interface RegisterResponse {
 }
 
 export interface LoginResponse {
-  accessToken: string;
-  refreshToken: null;
-  tokenType: string;
-  expiresIn: number;
+  access_token: string;
+  refresh_token: null;
+  token_type: string;
+  expires_in: number;
   user: {
     id: string;
     username: string;
@@ -62,7 +63,9 @@ export const authService = {
   },
 
   async logout(): Promise<void> {
-    await api.post('/auth/logout');
+    const token = useAuthStore.getState().access_token;
+    console.log("TOKEN BEFORE LOGOUT:", token);
+    await api.post('/auth/logout' ,{}, { withCredentials: true });
   },
 
   async refreshToken(): Promise<ApiResponse<LoginResponse>> {

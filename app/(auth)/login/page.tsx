@@ -30,7 +30,7 @@ export default function LoginPage() {
       setError("");
 
       const response = await authService.login(data);
-      setAuth(response.data.accessToken, response.data.user);
+      setAuth(response.data.access_token, response.data.user);
 
       router.push("/");
     } catch (err) {

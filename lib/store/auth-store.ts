@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
 
 interface User {
   id: string;
@@ -9,41 +8,44 @@ interface User {
 }
 
 interface AuthState {
-  accessToken: string | null;
+  // State
+  access_token: string | null;
   user: User | null;
   isInitialized: boolean;
-  _hasHydrated: boolean;
 
+  // Actions
   setAuth: (token: string, user: User) => void;
-  setAccessToken: (token: string | null) => void;
-  setUser: (user: User | null) => void;
   logout: () => void;
-
-  hydrateDone: () => void;
   markInitialized: () => void;
 }
 
-export const useAuthStore = create<AuthState>()(
-  persist(
-    (set) => ({
-      accessToken: null,
-      user: null,
-      isInitialized: false,
-      _hasHydrated: false,
+/**
+ * Auth Store - NO PERSISTENCE
+ * 
+ * Security:
+ * - access_token stored ONLY in memory (Zustand state)
+ * - refreshToken stored in HttpOnly cookie (managed by backend)
+ * - On page reload: auto-refresh via AuthProvider
+ */
+export const useAuthStore = create<AuthState>((set) => ({
+  // Initial state
+  access_token: null,
+  user: null,
+  isInitialized: false,
 
-      setAuth: (token, user) => set({ accessToken: token, user }),
-      setAccessToken: (token) => set({ accessToken: token }),
-      setUser: (user) => set({ user }),
-      logout: () => set({ accessToken: null, user: null }),
+  // Set both token and user (after login/refresh)
+  setAuth: (token, user) => set({ 
+    access_token: token, 
+    user,
+    isInitialized: true 
+  }),
 
-      hydrateDone: () => set({ _hasHydrated: true }),
-      markInitialized: () => set({ isInitialized: true }),
-    }),
-    {
-      name: "auth-storage",
-      onRehydrateStorage: () => (state) => {
-        state?.hydrateDone();
-      },
-    }
-  )
-);
+  // Clear all auth state
+  logout: () => set({ 
+    access_token: null, 
+    user: null 
+  }),
+
+  // Mark initialization complete
+  markInitialized: () => set({ isInitialized: true }),
+}));

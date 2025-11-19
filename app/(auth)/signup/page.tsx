@@ -97,31 +97,6 @@ export default function SignupPage() {
             )}
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-dark-text mb-2">
-                First Name
-              </label>
-              <input
-                {...register("firstName")}
-                type="text"
-                className="w-full px-4 py-3 bg-dark-bg border border-dark-border rounded-lg text-dark-text placeholder:text-dark-muted focus:outline-none focus:border-primary-500"
-                placeholder="First name"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-dark-text mb-2">
-                Last Name
-              </label>
-              <input
-                {...register("lastName")}
-                type="text"
-                className="w-full px-4 py-3 bg-dark-bg border border-dark-border rounded-lg text-dark-text placeholder:text-dark-muted focus:outline-none focus:border-primary-500"
-                placeholder="Last name"
-              />
-            </div>
-          </div>
-
           <button
             type="submit"
             disabled={isLoading}
