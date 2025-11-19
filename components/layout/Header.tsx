@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useAuthStore } from "@/lib/store/auth-store";
-import { api } from "@/lib/api";
+import { authService } from "@/lib/services/auth.service";
+import { getErrorMessage } from "@/lib/utils/error.utils";
 
 export function Header() {
   const router = useRouter();
@@ -16,25 +17,15 @@ export function Header() {
     setIsLoggingOut(true);
 
     try {
-      // Try to logout on backend
-      const token = useAuthStore.getState().access_token;
-      console.log("TOKEN BEFORE LOGOUT:", token);
-
-      console.log("IS INTERCEPTOR ABOUT TO ADD THIS TOKEN?");
-
-      await api.post("/auth/logout");
-      console.log("✅ Backend logout successful");
-    } catch (error: any) {
-      // Backend logout failed (token expired, network error, etc.)
-      // Continue with local logout anyway
-      console.warn("⚠️ Backend logout failed:", error?.response?.data?.message || error.message);
+      await authService.logout();
+    } catch (error) {
+      // Log error nhưng vẫn logout locally
+      console.warn("Backend logout failed:", getErrorMessage(error));
     } finally {
       // ALWAYS clear local session
       logout();
       setIsLoggingOut(false);
       setShowDropdown(false);
-      
-      // Redirect to login
       router.push("/login");
     }
   };
@@ -79,18 +70,13 @@ export function Header() {
               <div className="relative">
                 <button
                   onClick={() => setShowDropdown(!showDropdown)}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-dark-bg transition-colors"
+                  className="flex items-center gap-2 px-4 py-2 bg-dark-bg border border-dark-border rounded-lg hover:border-primary-500 transition-colors"
                 >
-                  <div className="h-8 w-8 rounded-full bg-primary-500 flex items-center justify-center">
-                    <span className="text-white font-semibold">
-                      {user.username.charAt(0).toUpperCase()}
-                    </span>
-                  </div>
                   <span className="text-dark-text">{user.username}</span>
                 </button>
 
                 {showDropdown && (
-                  <div className="absolute right-0 mt-2 w-48 bg-dark-card border border-dark-border rounded-lg shadow-lg py-2">
+                  <div className="absolute right-0 mt-2 w-48 bg-dark-card border border-dark-border rounded-lg shadow-lg">
                     <Link
                       href="/profile"
                       className="block px-4 py-2 text-dark-text hover:bg-dark-bg transition-colors"
@@ -109,7 +95,7 @@ export function Header() {
                 )}
               </div>
             ) : (
-              <div className="flex items-center gap-2">
+              <>
                 <Link
                   href="/login"
                   className="px-4 py-2 text-dark-text hover:text-primary-500 transition-colors"
@@ -117,12 +103,12 @@ export function Header() {
                   Login
                 </Link>
                 <Link
-                  href="/register"
+                  href="/signup"
                   className="px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
                 >
                   Sign Up
                 </Link>
-              </div>
+              </>
             )}
           </div>
         </div>

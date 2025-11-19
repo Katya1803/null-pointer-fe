@@ -6,34 +6,11 @@ import type {
   VerifyOtpFormData,
   ResendOtpFormData,
 } from '../validations/auth.validations';
-
-export interface ApiResponse<T> {
-  success: boolean;
-  message?: string;
-  data: T;
-  timestamp: string;
-}
-
-export interface RegisterResponse {
-  id: string;
-  username: string;
-  email: string;
-  needsVerification: boolean;
-  message: string;
-}
-
-export interface LoginResponse {
-  access_token: string;
-  refresh_token: null;
-  token_type: string;
-  expires_in: number;
-  user: {
-    id: string;
-    username: string;
-    email: string;
-    roles: string;
-  };
-}
+import type { ApiResponse } from '../types/api.types';
+import type {
+  RegisterResponse,
+  LoginResponse,
+} from '../types/auth.types';
 
 export const authService = {
   async register(data: RegisterFormData): Promise<ApiResponse<RegisterResponse>> {
@@ -63,9 +40,7 @@ export const authService = {
   },
 
   async logout(): Promise<void> {
-    const token = useAuthStore.getState().access_token;
-    console.log("TOKEN BEFORE LOGOUT:", token);
-    await api.post('/auth/logout' ,{}, { withCredentials: true });
+    await api.post('/auth/logout', {}, { withCredentials: true });
   },
 
   async refreshToken(): Promise<ApiResponse<LoginResponse>> {

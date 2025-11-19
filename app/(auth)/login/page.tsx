@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import { loginSchema, type LoginFormData } from "@/lib/validations/auth.validations";
 import { authService } from "@/lib/services/auth.service";
 import { useAuthStore } from "@/lib/store/auth-store";
-import { AxiosError } from "axios";
+import { getErrorMessage } from "@/lib/utils/error.utils";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -34,10 +34,7 @@ export default function LoginPage() {
 
       router.push("/");
     } catch (err) {
-      const axiosError = err as AxiosError<{ message?: string }>;
-      const errorMessage =
-        axiosError.response?.data?.message || "Login failed. Please try again.";
-      setError(errorMessage);
+      setError(getErrorMessage(err));
     } finally {
       setIsLoading(false);
     }
