@@ -43,8 +43,8 @@ function VerifyOtpContent() {
 
       const response = await authService.verifyOtp(data);
 
-      setAccessToken(response.data.accessToken);
-      setUser(response.data.user);
+      setAccessToken(response.data.data.accessToken);
+      setUser(response.data.data.user);
 
       router.push("/");
     } catch (err: any) {
