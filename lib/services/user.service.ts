@@ -1,11 +1,10 @@
 import { api } from '../api';
-import type { ApiResponse } from '../types/api.types';
+import type { ApiResponse, PageResponse } from '../types/api.types';
 import type {
   UserResponse,
   UserProfileResponse,
   UpdateUserRequest,
   UpdateUserProfileRequest,
-  PageResponse,
 } from '../types/user.types';
 
 export const userService = {
