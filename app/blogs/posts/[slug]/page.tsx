@@ -130,7 +130,22 @@ export default function PostDetailPage() {
 
           {/* Post Content */}
           <div 
-            className="prose prose-invert max-w-none"
+            className="
+              prose prose-invert max-w-none
+
+              /* paragraph spacing */
+              [&_p]:my-3 
+              [&_p:empty]:h-3 [&_p:empty]:block 
+
+              /* heading sizes + spacing */
+              [&_h1]:text-3xl [&_h1]:font-bold [&_h1]:mt-8 [&_h1]:mb-4
+              [&_h2]:text-2xl [&_h2]:font-semibold [&_h2]:mt-6 [&_h2]:mb-3
+              [&_h3]:text-1xl [&_h3]:font-semibold [&_h3]:mt-4 [&_h3]:mb-2
+
+              /* code / blockquote */
+              [&_blockquote]:my-4
+              [&_pre]:my-4
+            "
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
 

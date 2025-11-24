@@ -99,7 +99,6 @@ export function ProfileBlogsTab() {
                   >
                     {post.title}
                   </Link>
-                  <p className="text-dark-muted mt-2">{post.excerpt}</p>
                   <div className="flex items-center gap-2 mt-3 text-sm text-dark-muted">
                     <span>{post.createdAt}</span>
                     {post.status && (
