@@ -23,6 +23,11 @@ export const postService = {
       `/api/blogs/posts/my-posts?page=${page}&size=${size}`
     ),
 
+  getPendingPosts: (page: number = 0, size: number = 10) =>
+    api.get<ApiResponse<PageResponse<PostListItem>>>(
+      `/api/blogs/posts/pending?page=${page}&size=${size}`
+    ),
+
   getPostById: (postId: string) =>
     api.get<ApiResponse<PostDetail>>(`/api/blogs/posts/${postId}`),
 
@@ -37,6 +42,12 @@ export const postService = {
 
   submitForReview: (postId: string) =>
     api.post<ApiResponse<PostDetail>>(`/api/blogs/posts/${postId}/submit`),
+
+  approvePost: (postId: string) =>
+    api.post<ApiResponse<PostDetail>>(`/api/blogs/posts/${postId}/approve`),
+
+  rejectPost: (postId: string) =>
+    api.post<ApiResponse<PostDetail>>(`/api/blogs/posts/${postId}/reject`),
 
   deletePost: (postId: string) =>
     api.delete<ApiResponse<void>>(`/api/blogs/posts/${postId}`),

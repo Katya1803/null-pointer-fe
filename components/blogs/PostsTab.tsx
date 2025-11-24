@@ -2,15 +2,11 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/lib/store/auth-store";
 import { postService } from "@/lib/services/blog.service";
 import { getErrorMessage } from "@/lib/utils/error.utils";
 import type { PostListItem } from "@/lib/types/blog.types";
 
 export function PostsTab() {
-  const router = useRouter();
-  const { user } = useAuthStore();
   const [posts, setPosts] = useState<PostListItem[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
@@ -53,18 +49,6 @@ export function PostsTab() {
 
   return (
     <div>
-      {/* Create Button */}
-      {user && (
-        <div className="flex justify-end mb-6">
-          <button
-            onClick={() => router.push("/blogs/posts/create")}
-            className="px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-lg transition-colors"
-          >
-            Create Post
-          </button>
-        </div>
-      )}
-
       {/* Posts List */}
       {posts.length === 0 ? (
         <div className="text-center py-12 text-dark-muted">
@@ -78,13 +62,13 @@ export function PostsTab() {
               href={`/blogs/posts/${post.slug}`}
               className="block bg-dark-card border border-dark-border rounded-lg p-6 hover:border-primary-500 transition-colors"
             >
-              <h3 className="text-xl font-semibold text-dark-text mb-2">
+              <h2 className="text-xl font-semibold text-dark-text mb-2">
                 {post.title}
-              </h3>
+              </h2>
               <p className="text-dark-muted mb-3">{post.excerpt}</p>
-              <div className="flex items-center text-sm text-dark-muted">
-                <span>{post.author}</span>
-                <span className="mx-2">•</span>
+              <div className="flex items-center gap-4 text-sm text-dark-muted">
+                <span>By {post.author?.displayName || 'Unknown'}</span>
+                <span>•</span>
                 <span>{post.createdAt}</span>
               </div>
             </Link>

@@ -2,28 +2,27 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { postService } from "@/lib/services/blog.service";
 import { getErrorMessage } from "@/lib/utils/error.utils";
 import type { PostListItem } from "@/lib/types/blog.types";
 
-export function ProfileBlogsTab() {
-  const router = useRouter();
+export function PendingPostsTab() {
   const [posts, setPosts] = useState<PostListItem[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
+  const [actionLoading, setActionLoading] = useState<string | null>(null);
 
   useEffect(() => {
-    loadMyPosts(currentPage);
+    loadPendingPosts(currentPage);
   }, [currentPage]);
 
-  const loadMyPosts = async (page: number) => {
+  const loadPendingPosts = async (page: number) => {
     try {
       setIsLoading(true);
       setError("");
-      const response = await postService.getMyPosts(page, 10);
+      const response = await postService.getPendingPosts(page, 10);
       setPosts(response.data.data.content);
       setTotalPages(response.data.data.totalPages);
     } catch (err) {
@@ -33,30 +32,30 @@ export function ProfileBlogsTab() {
     }
   };
 
-  const handleDelete = async (postId: string) => {
-    if (!confirm("Are you sure you want to delete this post?")) return;
-
+  const handleApprove = async (postId: string) => {
     try {
-      await postService.deletePost(postId);
-      loadMyPosts(currentPage);
+      setActionLoading(postId);
+      await postService.approvePost(postId);
+      await loadPendingPosts(currentPage);
     } catch (err) {
       setError(getErrorMessage(err));
+    } finally {
+      setActionLoading(null);
     }
   };
 
-  const getStatusBadge = (status: string) => {
-    const styles = {
-      DRAFT: "bg-gray-500/10 border-gray-500/50 text-gray-400",
-      PENDING: "bg-yellow-500/10 border-yellow-500/50 text-yellow-400",
-      PUBLISHED: "bg-green-500/10 border-green-500/50 text-green-400",
-      REJECTED: "bg-red-500/10 border-red-500/50 text-red-400"
-    };
+  const handleReject = async (postId: string) => {
+    if (!confirm("Are you sure you want to reject this post?")) return;
 
-    return (
-      <span className={`px-2 py-1 text-xs rounded border ${styles[status as keyof typeof styles] || styles.DRAFT}`}>
-        {status}
-      </span>
-    );
+    try {
+      setActionLoading(postId);
+      await postService.rejectPost(postId);
+      await loadPendingPosts(currentPage);
+    } catch (err) {
+      setError(getErrorMessage(err));
+    } finally {
+      setActionLoading(null);
+    }
   };
 
   if (isLoading) {
@@ -69,16 +68,6 @@ export function ProfileBlogsTab() {
 
   return (
     <div>
-      {/* Create Button */}
-      <div className="flex justify-end mb-6">
-        <button
-          onClick={() => router.push("/blogs/posts/create")}
-          className="px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-lg transition-colors"
-        >
-          Create Post
-        </button>
-      </div>
-
       {error && (
         <div className="mb-6 bg-red-500/10 border border-red-500/50 rounded-lg p-4 text-red-400">
           {error}
@@ -88,7 +77,7 @@ export function ProfileBlogsTab() {
       {/* Posts List */}
       {posts.length === 0 ? (
         <div className="text-center py-12 text-dark-muted">
-          You haven't created any posts yet.
+          No pending posts to review.
         </div>
       ) : (
         <div className="space-y-4">
@@ -99,32 +88,33 @@ export function ProfileBlogsTab() {
             >
               <div className="flex items-start justify-between">
                 <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-2">
-                    <Link
-                      href={`/blogs/posts/${post.slug}`}
-                      className="text-xl font-semibold text-dark-text hover:text-primary-500 transition-colors"
-                    >
-                      {post.title}
-                    </Link>
-                    {getStatusBadge(post.status || "DRAFT")}
-                  </div>
+                  <Link
+                    href={`/blogs/posts/${post.slug}`}
+                    className="text-xl font-semibold text-dark-text hover:text-primary-500 transition-colors"
+                  >
+                    {post.title}
+                  </Link>
                   <p className="text-dark-muted mt-2">{post.excerpt}</p>
-                  <div className="flex items-center gap-2 mt-3 text-sm text-dark-muted">
+                  <div className="flex items-center gap-4 mt-3 text-sm text-dark-muted">
+                    <span>By {post.author.displayName}</span>
+                    <span>•</span>
                     <span>{post.createdAt}</span>
                   </div>
                 </div>
                 <div className="flex gap-2 ml-4">
                   <button
-                    onClick={() => router.push(`/blogs/posts/${post.id}/edit`)}
-                    className="px-3 py-1 text-sm bg-dark-bg border border-dark-border rounded hover:border-primary-500 transition-colors text-dark-text"
+                    onClick={() => handleApprove(post.id)}
+                    disabled={actionLoading === post.id}
+                    className="px-4 py-2 text-sm bg-green-500 hover:bg-green-600 text-white rounded transition-colors disabled:opacity-50"
                   >
-                    Edit
+                    {actionLoading === post.id ? "..." : "Approve"}
                   </button>
                   <button
-                    onClick={() => handleDelete(post.id)}
-                    className="px-3 py-1 text-sm bg-red-500/10 border border-red-500/50 rounded hover:bg-red-500/20 transition-colors text-red-400"
+                    onClick={() => handleReject(post.id)}
+                    disabled={actionLoading === post.id}
+                    className="px-4 py-2 text-sm bg-red-500 hover:bg-red-600 text-white rounded transition-colors disabled:opacity-50"
                   >
-                    Delete
+                    {actionLoading === post.id ? "..." : "Reject"}
                   </button>
                 </div>
               </div>

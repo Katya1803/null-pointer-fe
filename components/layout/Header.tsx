@@ -45,6 +45,22 @@ export function Header() {
     }
   };
 
+  // Backend returns roles as string: "ROLE_USER,ROLE_ADMIN"
+  const isAdmin = user?.roles?.includes("ROLE_ADMIN");
+
+  // Debug logging
+  useEffect(() => {
+    if (user) {
+      console.log("=== HEADER DEBUG ===");
+      console.log("User:", user);
+      console.log("Roles value:", user.roles);
+      console.log("Roles type:", typeof user.roles);
+      console.log("isAdmin:", isAdmin);
+      console.log("Check result:", user.roles?.includes("ROLE_ADMIN"));
+      console.log("==================");
+    }
+  }, [user, isAdmin]);
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-dark-border bg-dark-card/95 backdrop-blur">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -104,7 +120,6 @@ export function Header() {
                 <svg className="w-6 h-6 text-dark-text" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                 </svg>
-                {/* Badge for unread notifications */}
                 <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-primary-500 rounded-full"></span>
               </button>
             )}
@@ -119,7 +134,7 @@ export function Header() {
                 </button>
 
                 {showDropdown && (
-                  <div className="absolute right-0 mt-2 w-48 bg-dark-card border border-dark-border rounded-lg shadow-lg">
+                  <div className="absolute right-0 mt-2 w-48 bg-dark-card border border-dark-border rounded-lg shadow-lg z-50">
                     <Link
                       href="/profile"
                       className="block px-4 py-2 text-dark-text hover:bg-dark-bg transition-colors"
@@ -127,6 +142,16 @@ export function Header() {
                     >
                       Profile
                     </Link>
+                    {/* Force show admin link for debugging */}
+                    {isAdmin && (
+                      <Link
+                        href="/admin"
+                        className="block px-4 py-2 text-dark-text hover:bg-dark-bg transition-colors"
+                        onClick={() => setShowDropdown(false)}
+                      >
+                        Admin {/* Shows isAdmin: {String(isAdmin)} */}
+                      </Link>
+                    )}
                     <button
                       onClick={handleLogout}
                       disabled={isLoggingOut}

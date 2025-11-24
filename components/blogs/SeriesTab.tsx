@@ -15,6 +15,9 @@ export function SeriesTab() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
+  // Check if user has ROLE_ADMIN
+  const isAdmin = user && user.roles && user.roles.includes("ROLE_ADMIN");
+
   useEffect(() => {
     loadSeries();
   }, []);
@@ -50,8 +53,8 @@ export function SeriesTab() {
 
   return (
     <div>
-      {/* Create Button */}
-      {user && (
+      {/* Create Button - Only for Admins */}
+      {isAdmin && (
         <div className="flex justify-end mb-6">
           <button
             onClick={() => router.push("/blogs/series/create")}

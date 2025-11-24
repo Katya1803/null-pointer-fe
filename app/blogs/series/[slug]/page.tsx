@@ -1,17 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import Link from "next/link";
 import { seriesService } from "@/lib/services/blog.service";
 import { getErrorMessage } from "@/lib/utils/error.utils";
-import { useAuthStore } from "@/lib/store/auth-store";
 import type { SeriesDetail } from "@/lib/types/blog.types";
 
 export default function SeriesDetailPage() {
   const params = useParams();
-  const router = useRouter();
-  const { user } = useAuthStore();
   const slug = params.slug as string;
 
   const [series, setSeries] = useState<SeriesDetail | null>(null);
@@ -19,14 +16,17 @@ export default function SeriesDetailPage() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    loadSeries();
+    if (slug) {
+      loadSeries();
+    }
   }, [slug]);
 
   const loadSeries = async () => {
     try {
       setIsLoading(true);
       setError("");
-      // Since we only have slug, we need to get all series and find by slug
+      
+      // Get all series first to find by slug
       const response = await seriesService.getAllSeries();
       const found = response.data.data.find((s) => s.slug === slug);
       
@@ -58,6 +58,12 @@ export default function SeriesDetailPage() {
           <div className="bg-red-500/10 border border-red-500/50 rounded-lg p-4 text-red-400">
             {error || "Series not found"}
           </div>
+          <Link
+            href="/blogs"
+            className="inline-block mt-4 text-primary-500 hover:text-primary-600"
+          >
+            ← Back to Blogs
+          </Link>
         </div>
       </div>
     );
@@ -97,7 +103,7 @@ export default function SeriesDetailPage() {
             Posts in this Series
           </h2>
 
-          {series.posts.length === 0 ? (
+          {!series.posts || series.posts.length === 0 ? (
             <p className="text-dark-muted">No posts in this series yet.</p>
           ) : (
             <div className="space-y-4">
@@ -108,9 +114,9 @@ export default function SeriesDetailPage() {
                   className="block p-4 border border-dark-border rounded-lg hover:border-primary-500 transition-colors"
                 >
                   <div className="flex items-start gap-4">
-                    {post.order && (
+                    {post.orderInSeries && (
                       <div className="flex-shrink-0 w-8 h-8 bg-primary-500 text-white rounded-full flex items-center justify-center font-bold">
-                        {post.order}
+                        {post.orderInSeries}
                       </div>
                     )}
                     <div>

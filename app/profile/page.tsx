@@ -6,6 +6,7 @@ import { useAuthStore } from "@/lib/store/auth-store";
 import { userService, userProfileService } from "@/lib/services/user.service";
 import { getErrorMessage } from "@/lib/utils/error.utils";
 import { Avatar } from "@/components/ui/Avatar";
+import { ProfileBlogsTab } from "@/components/profile/ProfileBlogsTab";
 import type { UserResponse, UserProfileResponse } from "@/lib/types/user.types";
 
 type TabType = 'profile' | 'blogs' | 'community';
@@ -170,20 +171,7 @@ export default function UserManagementPage() {
                       </div>
                     </div>
 
-                    {/* Username (readonly) */}
-                    <div>
-                      <label className="block text-sm font-medium text-dark-text mb-2">
-                        Username
-                      </label>
-                      <input
-                        type="text"
-                        value={user.username}
-                        disabled
-                        className="w-full px-4 py-2 bg-dark-bg border border-dark-border rounded-lg text-dark-muted cursor-not-allowed"
-                      />
-                    </div>
-
-                    {/* Email (readonly) */}
+                    {/* Email (Read-only) */}
                     <div>
                       <label className="block text-sm font-medium text-dark-text mb-2">
                         Email
@@ -194,45 +182,41 @@ export default function UserManagementPage() {
                         disabled
                         className="w-full px-4 py-2 bg-dark-bg border border-dark-border rounded-lg text-dark-muted cursor-not-allowed"
                       />
-                      <p className="text-xs text-dark-muted mt-1">Email cannot be changed</p>
+                      <p className="mt-1 text-xs text-dark-muted">Email cannot be changed</p>
                     </div>
 
-                    {/* Name Row */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {/* First Name */}
-                      <div>
-                        <label className="block text-sm font-medium text-dark-text mb-2">
-                          First Name
-                        </label>
-                        <input
-                          type="text"
-                          value={formData.firstName}
-                          onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                          className="w-full px-4 py-2 bg-dark-bg border border-dark-border rounded-lg text-dark-text focus:outline-none focus:border-primary-500"
-                          placeholder="Enter your first name"
-                        />
-                      </div>
-
-                      {/* Last Name */}
-                      <div>
-                        <label className="block text-sm font-medium text-dark-text mb-2">
-                          Last Name
-                        </label>
-                        <input
-                          type="text"
-                          value={formData.lastName}
-                          onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                          className="w-full px-4 py-2 bg-dark-bg border border-dark-border rounded-lg text-dark-text focus:outline-none focus:border-primary-500"
-                          placeholder="Enter your last name"
-                        />
-                      </div>
+                    {/* First Name */}
+                    <div>
+                      <label className="block text-sm font-medium text-dark-text mb-2">
+                        First Name
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.firstName}
+                        onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                        className="w-full px-4 py-2 bg-dark-bg border border-dark-border rounded-lg text-dark-text focus:outline-none focus:border-primary-500"
+                        placeholder="Enter your first name"
+                      />
                     </div>
 
+                    {/* Last Name */}
+                    <div>
+                      <label className="block text-sm font-medium text-dark-text mb-2">
+                        Last Name
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.lastName}
+                        onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                        className="w-full px-4 py-2 bg-dark-bg border border-dark-border rounded-lg text-dark-text focus:outline-none focus:border-primary-500"
+                        placeholder="Enter your last name"
+                      />
+                    </div>
 
                     {/* Phone */}
                     <div>
                       <label className="block text-sm font-medium text-dark-text mb-2">
-                        Phone Number
+                        Phone
                       </label>
                       <input
                         type="tel"
@@ -271,15 +255,7 @@ export default function UserManagementPage() {
                 </div>
               )}
 
-              {activeTab === 'blogs' && (
-                <div className="text-center py-12">
-                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary-500/10 mb-4">
-                    <span className="text-3xl">📝</span>
-                  </div>
-                  <h2 className="text-2xl font-bold text-white mb-2">Blogs Coming Soon</h2>
-                  <p className="text-dark-muted">This feature is under development</p>
-                </div>
-              )}
+              {activeTab === 'blogs' && <ProfileBlogsTab />}
 
               {activeTab === 'community' && (
                 <div className="text-center py-12">

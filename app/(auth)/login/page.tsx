@@ -33,8 +33,17 @@ export default function LoginPage() {
       setAuth(response.data.access_token, response.data.user);
 
       router.push("/");
-    } catch (err) {
-      setError(getErrorMessage(err));
+    } catch (err: any) {
+      const errorMessage = getErrorMessage(err);
+      
+      // Check if error message contains email verification info
+      if (errorMessage.includes("EMAIL_NOT_VERIFIED:")) {
+        const email = errorMessage.split("EMAIL_NOT_VERIFIED:")[1];
+        router.push(`/verify-otp?email=${encodeURIComponent(email)}`);
+        return;
+      }
+      
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -64,25 +73,41 @@ export default function LoginPage() {
               type="text"
               className="w-full px-4 py-3 bg-dark-bg border border-dark-border rounded-lg text-dark-text placeholder:text-dark-muted focus:outline-none focus:border-primary-500"
               placeholder="Enter username or email"
-              disabled={isLoading}
             />
             {errors.account && (
-              <p className="mt-1 text-sm text-red-500">{errors.account.message}</p>
+              <p className="mt-2 text-sm text-red-500">{errors.account.message}</p>
             )}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-dark-text mb-2">Password</label>
+            <label className="block text-sm font-medium text-dark-text mb-2">
+              Password
+            </label>
             <input
               {...register("password")}
               type="password"
               className="w-full px-4 py-3 bg-dark-bg border border-dark-border rounded-lg text-dark-text placeholder:text-dark-muted focus:outline-none focus:border-primary-500"
               placeholder="Enter password"
-              disabled={isLoading}
             />
             {errors.password && (
-              <p className="mt-1 text-sm text-red-500">{errors.password.message}</p>
+              <p className="mt-2 text-sm text-red-500">{errors.password.message}</p>
             )}
+          </div>
+
+          <div className="flex items-center justify-between">
+            <label className="flex items-center">
+              <input
+                type="checkbox"
+                className="w-4 h-4 text-primary-500 bg-dark-bg border-dark-border rounded focus:ring-primary-500"
+              />
+              <span className="ml-2 text-sm text-dark-muted">Remember me</span>
+            </label>
+            <Link
+              href="/forgot-password"
+              className="text-sm text-primary-500 hover:text-primary-600 transition-colors"
+            >
+              Forgot password?
+            </Link>
           </div>
 
           <button
@@ -94,14 +119,12 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <div className="mt-6 text-center">
-          <p className="text-dark-muted text-sm">
-            Don't have an account?{" "}
-            <Link href="/signup" className="text-primary-500 hover:underline">
-              Sign up
-            </Link>
-          </p>
-        </div>
+        <p className="mt-6 text-center text-sm text-dark-muted">
+          Don't have an account?{" "}
+          <Link href="/signup" className="text-primary-500 hover:text-primary-600 transition-colors">
+            Sign up
+          </Link>
+        </p>
       </div>
     </div>
   );

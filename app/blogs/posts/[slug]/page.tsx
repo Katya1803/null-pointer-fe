@@ -19,7 +19,9 @@ export default function PostDetailPage() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    loadPost();
+    if (slug) {
+      loadPost();
+    }
   }, [slug]);
 
   const loadPost = async () => {
@@ -56,12 +58,19 @@ export default function PostDetailPage() {
           <div className="bg-red-500/10 border border-red-500/50 rounded-lg p-4 text-red-400">
             {error || "Post not found"}
           </div>
+          <Link
+            href="/blogs"
+            className="inline-block mt-4 text-primary-500 hover:text-primary-600"
+          >
+            ← Back to Blogs
+          </Link>
         </div>
       </div>
     );
   }
 
-  const isAuthor = user && user.id === post.author.id;
+  // Check if current user is the author
+  const isAuthor = user && post.author && user.id === post.author.id;
 
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -81,13 +90,13 @@ export default function PostDetailPage() {
             
             <div className="flex items-center justify-between text-sm text-dark-muted">
               <div className="flex items-center gap-4">
-                <span>{post.author.username}</span>
+                <span>By {post.author?.displayName || 'Unknown'}</span>
                 <span>•</span>
                 <span>{post.createdAt}</span>
-                {post.status !== 'PUBLISHED' && (
+                {post.status && post.status !== 'PUBLISHED' && (
                   <>
                     <span>•</span>
-                    <span className="px-2 py-1 bg-yellow-500/20 text-yellow-400 rounded text-xs">
+                    <span className="px-2 py-1 bg-yellow-500/10 border border-yellow-500/50 text-yellow-400 rounded text-xs">
                       {post.status}
                     </span>
                   </>
@@ -97,32 +106,42 @@ export default function PostDetailPage() {
               {isAuthor && (
                 <button
                   onClick={handleEdit}
-                  className="px-4 py-1 bg-primary-500 hover:bg-primary-600 text-white rounded-lg transition-colors text-sm"
+                  className="px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-lg text-sm transition-colors"
                 >
-                  Edit
+                  Edit Post
                 </button>
               )}
             </div>
-
-            {post.series && (
-              <div className="mt-4 text-sm">
-                <span className="text-dark-muted">Part of: </span>
-                <Link
-                  href={`/blogs/series/${post.series.slug}`}
-                  className="text-primary-500 hover:text-primary-600"
-                >
-                  {post.series.title}
-                  {post.series.orderInSeries && ` (#${post.series.orderInSeries})`}
-                </Link>
-              </div>
-            )}
           </div>
 
+          {/* Series Info */}
+          {post.series && (
+            <div className="mb-6 p-4 bg-primary-500/10 border border-primary-500/20 rounded-lg">
+              <p className="text-sm text-dark-muted mb-1">Part of series:</p>
+              <Link
+                href={`/blogs/series/${post.series.slug}`}
+                className="text-primary-500 hover:text-primary-600 font-medium"
+              >
+                {post.series.title}
+                {post.orderInSeries && ` - Part ${post.orderInSeries}`}
+              </Link>
+            </div>
+          )}
+
           {/* Post Content */}
-          <div
+          <div 
             className="prose prose-invert max-w-none"
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
+
+          {/* Footer */}
+          <div className="mt-8 pt-6 border-t border-dark-border">
+            <div className="flex items-center justify-between">
+              <div className="text-sm text-dark-muted">
+                Last updated: {post.updatedAt}
+              </div>
+            </div>
+          </div>
         </article>
       </div>
     </div>

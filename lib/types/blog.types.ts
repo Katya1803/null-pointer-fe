@@ -1,44 +1,41 @@
-// Blog API Types matching backend DTOs
-
 export interface PostListItem {
   id: string;
   title: string;
   slug: string;
   excerpt: string;
   createdAt: string;
-  author: string;
+  author: PostAuthor;
+  status?: string;
 }
 
-export interface AuthorDto {
+export interface PostAuthor {
   id: string;
-  username: string;
-  avatar: string | null;
-}
-
-export interface SeriesInfo {
-  id: string;
-  title: string;
-  slug: string;
-  orderInSeries: number | null;
+  displayName: string;
+  avatarUrl?: string;
 }
 
 export interface PostDetail {
   id: string;
   title: string;
   slug: string;
-  excerpt: string;
   content: string;
-  status: 'PUBLISHED' | 'DRAFT' | 'PENDING';
   createdAt: string;
   updatedAt: string;
-  author: AuthorDto;
-  series: SeriesInfo | null;
+  author: PostAuthor;
+  series?: SeriesSummary;
+  orderInSeries?: number;
+  status: string;
+}
+
+export interface SeriesSummary {
+  id: string;
+  title: string;
+  slug: string;
 }
 
 export interface PostCreateRequest {
   title: string;
   slug: string;
-  excerpt?: string;
   content: string;
   seriesId?: string;
   orderInSeries?: number;
@@ -48,7 +45,6 @@ export interface PostUpdateRequest {
   title?: string;
   slug?: string;
   content?: string;
-  status?: string;
   seriesId?: string;
   orderInSeries?: number;
 }
@@ -59,20 +55,20 @@ export interface SeriesListItem {
   slug: string;
 }
 
-export interface SeriesPostItem {
-  id: string;
-  title: string;
-  slug: string;
-  order: number | null;
-}
-
 export interface SeriesDetail {
   id: string;
   title: string;
   slug: string;
-  description: string | null;
-  thumbnail: string | null;
-  posts: SeriesPostItem[];
+  description?: string;
+  thumbnail?: string;
+  posts: PostInSeries[];
+}
+
+export interface PostInSeries {
+  id: string;
+  title: string;
+  slug: string;
+  orderInSeries: number;
 }
 
 export interface SeriesCreateRequest {
