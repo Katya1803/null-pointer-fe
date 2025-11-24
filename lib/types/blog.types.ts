@@ -4,13 +4,13 @@ export interface PostListItem {
   slug: string;
   excerpt: string;
   createdAt: string;
-  author: PostAuthor;
+  authorName: string;
   status?: string;
 }
 
 export interface PostAuthor {
   id: string;
-  displayName: string;
+  displayName?: string;
   avatarUrl?: string;
 }
 

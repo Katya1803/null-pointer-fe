@@ -96,7 +96,7 @@ export function PendingPostsTab() {
                   </Link>
                   <p className="text-dark-muted mt-2">{post.excerpt}</p>
                   <div className="flex items-center gap-4 mt-3 text-sm text-dark-muted">
-                    <span>By {post.author.displayName}</span>
+                    <span>By {post.authorName || 'Unknown'}</span>
                     <span>•</span>
                     <span>{post.createdAt}</span>
                   </div>

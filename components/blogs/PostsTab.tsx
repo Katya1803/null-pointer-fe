@@ -67,7 +67,7 @@ export function PostsTab() {
               </h2>
               <p className="text-dark-muted mb-3">{post.excerpt}</p>
               <div className="flex items-center gap-4 text-sm text-dark-muted">
-                <span>By {post.author?.displayName || 'Unknown'}</span>
+                <span>By {post.authorName?.displayName || 'Unknown'}</span>
                 <span>•</span>
                 <span>{post.createdAt}</span>
               </div>
