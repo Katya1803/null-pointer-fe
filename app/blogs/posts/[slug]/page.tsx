@@ -87,7 +87,7 @@ export default function PostDetailPage() {
         <article className="bg-dark-card border border-dark-border rounded-lg p-8">
           <div className="mb-6">
             <h1 className="text-4xl font-bold text-dark-text mb-4">{post.title}</h1>
-            
+
             <div className="flex items-center justify-between text-sm text-dark-muted">
               <div className="flex items-center gap-4">
                 <span>By {post.author?.displayName || 'Unknown'}</span>
@@ -102,7 +102,7 @@ export default function PostDetailPage() {
                   </>
                 )}
               </div>
-              
+
               {isAuthor && (
                 <button
                   onClick={handleEdit}
@@ -129,25 +129,31 @@ export default function PostDetailPage() {
           )}
 
           {/* Post Content */}
-          <div 
+          <div
             className="
-              prose prose-invert max-w-none
+                        prose prose-invert max-w-none
 
-              /* paragraph spacing */
-              [&_p]:my-3 
-              [&_p:empty]:h-3 [&_p:empty]:block 
+                        /* paragraph spacing */
+                        [&_p]:my-3 
+                        [&_p:empty]:h-3 [&_p:empty]:block 
 
-              /* heading sizes + spacing */
-              [&_h1]:text-3xl [&_h1]:font-bold [&_h1]:mt-8 [&_h1]:mb-4
-              [&_h2]:text-2xl [&_h2]:font-semibold [&_h2]:mt-6 [&_h2]:mb-3
-              [&_h3]:text-1xl [&_h3]:font-semibold [&_h3]:mt-4 [&_h3]:mb-2
+                        /* heading sizes + spacing */
+                        [&_h1]:text-3xl [&_h1]:font-bold [&_h1]:mt-8 [&_h1]:mb-4
+                        [&_h2]:text-2xl [&_h2]:font-semibold [&_h2]:mt-6 [&_h2]:mb-3
+                        [&_h3]:text-1xl [&_h3]:font-semibold [&_h3]:mt-4 [&_h3]:mb-2
 
-              /* code / blockquote */
-              [&_blockquote]:my-4
-              [&_pre]:my-4
-            "
+                        /* LIST FIX */
+                        [&_ul]:list-disc [&_ul]:ml-6 [&_ul]:my-4
+                        [&_ol]:list-decimal [&_ol]:ml-6 [&_ol]:my-4
+                        [&_li]:my-1
+
+                        /* code / blockquote */
+                        [&_blockquote]:my-4
+                        [&_pre]:my-4
+                      "
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
+
 
           {/* Footer */}
           <div className="mt-8 pt-6 border-t border-dark-border">

@@ -6,6 +6,11 @@ import Link from "@tiptap/extension-link";
 import Image from "@tiptap/extension-image";
 import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
 import { common, createLowlight } from "lowlight";
+import ListItem from "@tiptap/extension-list-item";
+
+const CustomListItem = ListItem.extend({
+  content: "paragraph block*",
+});
 
 const lowlight = createLowlight(common);
 
@@ -22,6 +27,7 @@ export function TiptapEditor({ content, onChange, placeholder }: TiptapEditorPro
       StarterKit.configure({
         codeBlock: false,
       }),
+      CustomListItem,
       Link.configure({
         openOnClick: false,
         HTMLAttributes: {
