@@ -9,7 +9,7 @@ const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ||
   "218819989351-vd0qstuj4v33n7oauto62bloq38cp07k.apps.googleusercontent.com";
 
 const GOOGLE_REDIRECT_URI = process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI || 
-  "http://localhost:3000/auth/google-callback";
+  "http://localhost:3000/auth/google/callback";
 
 class GoogleAuthService {
   /**

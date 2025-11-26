@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { googleAuthService } from "@/lib/services/google-auth.service";
 import { useAuthStore } from "@/lib/store/auth-store";
@@ -12,38 +12,42 @@ export default function GoogleCallbackPage() {
   const { setAuth } = useAuthStore();
   const [error, setError] = useState<string>("");
 
+  const hasRun = useRef(false);
+
   useEffect(() => {
+    if (hasRun.current) return;
+    hasRun.current = true;
+
     const handleCallback = async () => {
       const code = searchParams.get("code");
       const errorParam = searchParams.get("error");
 
       if (errorParam) {
         setError("Google authentication was cancelled or failed");
-        setTimeout(() => router.push("/login"), 3000);
+        setTimeout(() => router.push("/login"), 2000);
         return;
       }
 
       if (!code) {
         setError("No authorization code received from Google");
-        setTimeout(() => router.push("/login"), 3000);
+        setTimeout(() => router.push("/login"), 2000);
         return;
       }
 
       try {
         const response = await googleAuthService.handleGoogleCallback(code);
-        
+
         setAuth(response.data.access_token, response.data.user);
-        
+
         router.push("/");
-      } catch (err: any) {
-        const errorMessage = getErrorMessage(err);
-        setError(errorMessage);
-        setTimeout(() => router.push("/login"), 3000);
+      } catch (err) {
+        setError(getErrorMessage(err));
+        setTimeout(() => router.push("/login"), 2000);
       }
     };
 
     handleCallback();
-  }, [searchParams, router, setAuth]);
+  }, []); // ❗ Không để depend
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-dark-bg">
