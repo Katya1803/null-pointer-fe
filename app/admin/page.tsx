@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/lib/store/auth-store";
 import { PendingPostsTab } from "@/components/admin/PendingPostsTab";
+import { CoursesTab } from "@/components/admin/CoursesTab";
 
 type TabType = 'pending-posts' | 'courses';
 
@@ -33,7 +34,6 @@ export default function AdminPage() {
       <div className="max-w-6xl mx-auto">
         <h1 className="text-3xl font-bold mb-6 text-dark-text">Admin Dashboard</h1>
 
-        {/* Tabs */}
         <div className="flex gap-4 mb-6 border-b border-dark-border">
           <button
             onClick={() => setActiveTab("pending-posts")}
@@ -57,15 +57,7 @@ export default function AdminPage() {
           </button>
         </div>
 
-        {/* Tab Content */}
-        {activeTab === "pending-posts" ? (
-          <PendingPostsTab />
-        ) : (
-          <div className="text-center py-12 text-dark-muted">
-            <h2 className="text-xl font-semibold mb-2">Coming Soon</h2>
-            <p>Course management features will be available soon.</p>
-          </div>
-        )}
+        {activeTab === "pending-posts" ? <PendingPostsTab /> : <CoursesTab />}
       </div>
     </div>
   );
