@@ -1,3 +1,4 @@
+// app/(auth)/login/page.tsx - UPDATED VERSION
 "use client";
 
 import { useState } from "react";
@@ -9,6 +10,7 @@ import { loginSchema, type LoginFormData } from "@/lib/validations/auth.validati
 import { authService } from "@/lib/services/auth.service";
 import { useAuthStore } from "@/lib/store/auth-store";
 import { getErrorMessage } from "@/lib/utils/error.utils";
+import { GoogleLoginButton } from "@/components/auth/GoogleLoginButton";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -36,7 +38,6 @@ export default function LoginPage() {
     } catch (err: any) {
       const errorMessage = getErrorMessage(err);
       
-      // Check if error message contains email verification info
       if (errorMessage.includes("EMAIL_NOT_VERIFIED:")) {
         const email = errorMessage.split("EMAIL_NOT_VERIFIED:")[1];
         router.push(`/verify-otp?email=${encodeURIComponent(email)}`);
@@ -63,6 +64,20 @@ export default function LoginPage() {
           </div>
         )}
 
+        {/* Google Login Button */}
+        <GoogleLoginButton className="mb-6" />
+
+        {/* Divider */}
+        <div className="relative mb-6">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-dark-border"></div>
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="px-2 bg-dark-card text-dark-muted">Or continue with</span>
+          </div>
+        </div>
+
+        {/* Email/Password Login Form */}
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div>
             <label className="block text-sm font-medium text-dark-text mb-2">
@@ -75,7 +90,7 @@ export default function LoginPage() {
               placeholder="Enter username or email"
             />
             {errors.account && (
-              <p className="mt-2 text-sm text-red-500">{errors.account.message}</p>
+              <p className="mt-1 text-sm text-red-500">{errors.account.message}</p>
             )}
           </div>
 
@@ -87,44 +102,28 @@ export default function LoginPage() {
               {...register("password")}
               type="password"
               className="w-full px-4 py-3 bg-dark-bg border border-dark-border rounded-lg text-dark-text placeholder:text-dark-muted focus:outline-none focus:border-primary-500"
-              placeholder="Enter password"
+              placeholder="Enter your password"
             />
             {errors.password && (
-              <p className="mt-2 text-sm text-red-500">{errors.password.message}</p>
+              <p className="mt-1 text-sm text-red-500">{errors.password.message}</p>
             )}
-          </div>
-
-          <div className="flex items-center justify-between">
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                className="w-4 h-4 text-primary-500 bg-dark-bg border-dark-border rounded focus:ring-primary-500"
-              />
-              <span className="ml-2 text-sm text-dark-muted">Remember me</span>
-            </label>
-            <Link
-              href="/forgot-password"
-              className="text-sm text-primary-500 hover:text-primary-600 transition-colors"
-            >
-              Forgot password?
-            </Link>
           </div>
 
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-3 bg-primary-500 text-white rounded-lg font-medium hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="w-full bg-primary-500 hover:bg-primary-600 text-white font-medium py-3 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? "Signing in..." : "Sign In"}
           </button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-dark-muted">
-          Don't have an account?{" "}
-          <Link href="/signup" className="text-primary-500 hover:text-primary-600 transition-colors">
+        <div className="mt-6 text-center text-sm">
+          <span className="text-dark-muted">Don&apos;t have an account? </span>
+          <Link href="/register" className="text-primary-500 hover:text-primary-400 font-medium">
             Sign up
           </Link>
-        </p>
+        </div>
       </div>
     </div>
   );
