@@ -118,7 +118,7 @@ export function ProfileBlogsTab() {
                 </div>
                 <div className="flex gap-2 ml-4">
                   <button
-                    onClick={() => router.push(`/blogs/posts/${post.id}/edit`)}
+                    onClick={() => router.push(`/blogs/posts/edit/${post.id}`)}
                     className="px-3 py-1 text-sm bg-dark-bg border border-dark-border rounded hover:border-primary-500 transition-colors text-dark-text"
                   >
                     Edit

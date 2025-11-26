@@ -76,3 +76,29 @@ html:not(.dark) textarea:disabled {
   background-color: #f3f4f6;
   color: #9ca3af;
 }
+
+/* Override gradient backgrounds in light mode */
+html:not(.dark) .bg-gradient-to-b {
+  background-image: linear-gradient(to bottom, #ffffff, #f9fafb);
+}
+
+html:not(.dark) .from-dark-card {
+  --tw-gradient-from: #ffffff;
+}
+
+html:not(.dark) .to-dark-bg {
+  --tw-gradient-to: #f9fafb;
+}
+
+html:not(.dark) .bg-gradient-to-br {
+  background-image: none;
+  background-color: #e5e7eb;
+}
+
+html:not(.dark) .from-primary-500 {
+  --tw-gradient-from: #22c55e;
+}
+
+html:not(.dark) .to-primary-700 {
+  --tw-gradient-to: #22c55e;
+}
