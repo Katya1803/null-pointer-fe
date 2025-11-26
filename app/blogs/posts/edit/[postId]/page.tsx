@@ -6,6 +6,7 @@ import { useAuthStore } from "@/lib/store/auth-store";
 import { postService, seriesService } from "@/lib/services/blog.service";
 import { getErrorMessage } from "@/lib/utils/error.utils";
 import { TiptapEditor } from "@/components/editor/TiptapEditor";
+import { useToast } from "@/lib/hooks/useToast";
 import type { SeriesListItem, PostDetail } from "@/lib/types/blog.types";
 
 export default function EditPostPage() {
@@ -13,6 +14,7 @@ export default function EditPostPage() {
   const params = useParams();
   const postId = params.postId as string;
   const { user } = useAuthStore();
+  const toast = useToast();
 
   const [post, setPost] = useState<PostDetail | null>(null);
   const [title, setTitle] = useState("");
@@ -82,12 +84,12 @@ export default function EditPostPage() {
     if (!user) return;
 
     if (!title.trim()) {
-      alert("Title is required");
+      toast.error("Title is required");
       return;
     }
 
     if (!content.trim()) {
-      alert("Content is required");
+      toast.error("Content is required");
       return;
     }
 
@@ -103,11 +105,11 @@ export default function EditPostPage() {
         orderInSeries: seriesId ? orderInSeries : undefined,
       });
 
-      alert("Post updated successfully!");
+      toast.success("Post updated successfully!");
       router.push("/blogs?tab=my-posts");
     } catch (err) {
       setError(getErrorMessage(err));
-      alert("Failed to update post: " + getErrorMessage(err));
+      toast.error("Failed to update post: " + getErrorMessage(err));
     } finally {
       setIsSubmitting(false);
     }

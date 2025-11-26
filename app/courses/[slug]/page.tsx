@@ -5,6 +5,7 @@ import { useRouter, useParams } from "next/navigation";
 import { courseService, enrollmentService } from "@/lib/services/course.service";
 import { getErrorMessage } from "@/lib/utils/error.utils";
 import { useAuthStore } from "@/lib/store/auth-store";
+import { useToast } from "@/lib/hooks/useToast";
 import type { CourseDetail } from "@/lib/types/course.types";
 
 export default function CourseDetailPage() {
@@ -12,6 +13,7 @@ export default function CourseDetailPage() {
   const params = useParams();
   const slug = params.slug as string;
   const { user } = useAuthStore();
+  const toast = useToast();
 
   const [course, setCourse] = useState<CourseDetail | null>(null);
   const [loading, setLoading] = useState(true);
@@ -92,7 +94,7 @@ export default function CourseDetailPage() {
     if (isPreview || isEnrolled) {
       router.push(`/courses/${slug}/lectures/${lectureId}`);
     } else {
-      alert("Please enroll in this course to access this lecture");
+      toast.warning("Please enroll in this course to access this lecture");
     }
   };
 

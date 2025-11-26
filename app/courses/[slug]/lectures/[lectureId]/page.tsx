@@ -5,6 +5,7 @@ import { useRouter, useParams } from "next/navigation";
 import { lectureService, courseService, lectureProgressService, enrollmentService } from "@/lib/services/course.service";
 import { getErrorMessage } from "@/lib/utils/error.utils";
 import { useAuthStore } from "@/lib/store/auth-store";
+import { useToast } from "@/lib/hooks/useToast";
 import type { LectureResponse, CourseDetail, CourseProgressDetail } from "@/lib/types/course.types";
 
 export default function LecturePage() {
@@ -23,6 +24,8 @@ export default function LecturePage() {
   const [isCompleted, setIsCompleted] = useState(false);
   const [isMarking, setIsMarking] = useState(false);
 
+  const toast = useToast();
+  
   useEffect(() => {
     fetchData();
   }, [lectureId]);
@@ -93,7 +96,7 @@ export default function LecturePage() {
       }
     } catch (error) {
       console.error("Failed to mark complete:", error);
-      alert("Failed to mark as complete: " + getErrorMessage(error));
+      toast.error("Failed to mark as complete: " + getErrorMessage(error));
     } finally {
       setIsMarking(false);
     }

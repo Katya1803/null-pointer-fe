@@ -1,17 +1,26 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { postService } from "@/lib/services/blog.service";
 import { getErrorMessage } from "@/lib/utils/error.utils";
 import type { PostListItem } from "@/lib/types/blog.types";
 
 export function PostsTab() {
+  const searchParams = useSearchParams();
+  const searchQuery = searchParams.get("search") || "";
+  
   const [posts, setPosts] = useState<PostListItem[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    setCurrentPage(0); // Reset to page 0 when search changes
+    loadPosts(0);
+  }, [searchQuery]);
 
   useEffect(() => {
     loadPosts(currentPage);
@@ -21,7 +30,11 @@ export function PostsTab() {
     try {
       setIsLoading(true);
       setError("");
-      const response = await postService.getPublishedPosts(page, 10);
+      const response = await postService.getPublishedPosts(
+        page, 
+        10, 
+        searchQuery || undefined
+      );
       setPosts(response.data.data.content);
       setTotalPages(response.data.data.totalPages);
     } catch (err) {
@@ -49,10 +62,24 @@ export function PostsTab() {
 
   return (
     <div>
+      {/* Search Info */}
+      {searchQuery && (
+        <div className="mb-6 p-4 bg-dark-card border border-dark-border rounded-lg">
+          <p className="text-dark-text">
+            Search results for: <span className="font-semibold text-primary-500">"{searchQuery}"</span>
+          </p>
+          <p className="text-sm text-dark-muted mt-1">
+            Found {posts.length} post{posts.length !== 1 ? 's' : ''}
+          </p>
+        </div>
+      )}
+
       {/* Posts List */}
       {posts.length === 0 ? (
         <div className="text-center py-12 text-dark-muted">
-          No posts available yet.
+          {searchQuery 
+            ? `No posts found for "${searchQuery}"`
+            : "No posts available yet."}
         </div>
       ) : (
         <div className="space-y-4">
@@ -65,6 +92,11 @@ export function PostsTab() {
               <h2 className="text-xl font-semibold text-dark-text mb-2">
                 {post.title}
               </h2>
+
+              <div className="flex items-center gap-2 text-xs text-dark-muted">
+                <span>Created at: </span>
+                {new Date(post.createdAt).toLocaleDateString()}
+              </div>
             </Link>
           ))}
         </div>

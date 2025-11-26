@@ -13,10 +13,18 @@ import type {
 
 // Post Service
 export const postService = {
-  getPublishedPosts: (page: number = 0, size: number = 10) =>
-    api.get<ApiResponse<PageResponse<PostListItem>>>(
-      `/api/blogs/posts?page=${page}&size=${size}`
-    ),
+  getPublishedPosts: (page: number = 0, size: number = 10, keyword?: string) => {
+    const params = new URLSearchParams({
+      page: page.toString(),
+      size: size.toString(),
+    });
+    if (keyword) {
+      params.append('keyword', keyword);
+    }
+    return api.get<ApiResponse<PageResponse<PostListItem>>>(
+      `/api/blogs/posts?${params.toString()}`
+    );
+  },
 
   getMyPosts: (page: number = 0, size: number = 10) =>
     api.get<ApiResponse<PageResponse<PostListItem>>>(

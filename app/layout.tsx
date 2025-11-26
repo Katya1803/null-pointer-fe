@@ -3,6 +3,7 @@ import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { AuthProvider } from "@/components/providers/AuthProvider";
+import { ToastContainer } from "@/components/ui/ToastContainer";
 
 export const metadata: Metadata = {
   title: "NullPointer - Free E-Learning for Java Developers",
@@ -23,6 +24,7 @@ export default function RootLayout({
             {children}
           </main>
           <Footer />
+          <ToastContainer />
         </AuthProvider>
       </body>
     </html>
