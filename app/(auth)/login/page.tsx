@@ -64,20 +64,7 @@ export default function LoginPage() {
           </div>
         )}
 
-        {/* Google Login Button */}
-        <GoogleLoginButton className="mb-6" />
 
-        {/* Divider */}
-        <div className="relative mb-6">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-dark-border"></div>
-          </div>
-          <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-dark-card text-dark-muted">Or continue with</span>
-          </div>
-        </div>
-
-        {/* Email/Password Login Form */}
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div>
             <label className="block text-sm font-medium text-dark-text mb-2">
@@ -117,6 +104,23 @@ export default function LoginPage() {
             {isLoading ? "Signing in..." : "Sign In"}
           </button>
         </form>
+
+        <div className="mt-4" />                
+        
+        {/* Divider */}
+        <div className="relative mb-6">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-dark-border"></div>
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="px-2 bg-dark-card text-dark-muted">Or continue with</span>
+          </div>
+        </div>
+
+        {/* Google Login Button */}
+        <GoogleLoginButton className="mb-6" />
+        {/* Email/Password Login Form */}
+        
 
         <div className="mt-6 text-center text-sm">
           <span className="text-dark-muted">Don&apos;t have an account? </span>
