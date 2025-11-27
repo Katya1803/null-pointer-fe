@@ -31,7 +31,7 @@ export function Header() {
     }
   }, []);
 
-    useEffect(() => {
+  useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
         setShowSearchResults(false);
@@ -135,12 +135,14 @@ export function Header() {
             >
               Blogs
             </Link>
+
             <Link
-              href="/my-learning"
+              href="/ebooks"
               className="text-dark-text hover:text-primary-500 transition-colors"
             >
-              My Learning
+              eBooks
             </Link>
+
           </nav>
 
           <div className="hidden lg:flex flex-1 max-w-md mx-8 relative" ref={searchRef}>
@@ -204,6 +206,14 @@ export function Header() {
           </div>
 
           <div className="flex items-center gap-4">
+            {/* My Learning */}
+            <Link
+              href="/my-learning"
+              className="hidden md:block text-dark-text hover:text-primary-500 transition-colors"
+            >
+              My Learning
+            </Link>
+
             {/* Theme Toggle */}
             <button
               onClick={toggleTheme}

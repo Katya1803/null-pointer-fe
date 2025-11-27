@@ -5,8 +5,9 @@ import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/lib/store/auth-store";
 import { PendingPostsTab } from "@/components/admin/PendingPostsTab";
 import { CoursesTab } from "@/components/admin/CoursesTab";
+import { EbooksTab } from "@/components/admin/EbooksTab";
 
-type TabType = 'pending-posts' | 'courses';
+type TabType = 'pending-posts' | 'courses' | 'ebooks';
 
 export default function AdminPage() {
   const router = useRouter();
@@ -29,6 +30,19 @@ export default function AdminPage() {
     return null;
   }
 
+  const renderTab = () => {
+    switch (activeTab) {
+      case 'pending-posts':
+        return <PendingPostsTab />;
+      case 'courses':
+        return <CoursesTab />;
+      case 'ebooks':
+        return <EbooksTab />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="max-w-6xl mx-auto">
@@ -46,6 +60,16 @@ export default function AdminPage() {
             Pending Posts
           </button>
           <button
+            onClick={() => setActiveTab("ebooks")}
+            className={`px-4 py-2 font-medium transition-colors border-b-2 ${
+              activeTab === "ebooks"
+                ? "border-primary-500 text-primary-500"
+                : "border-transparent text-dark-muted hover:text-dark-text"
+            }`}
+          >
+            eBooks
+          </button>
+          <button
             onClick={() => setActiveTab("courses")}
             className={`px-4 py-2 font-medium transition-colors border-b-2 ${
               activeTab === "courses"
@@ -57,7 +81,7 @@ export default function AdminPage() {
           </button>
         </div>
 
-        {activeTab === "pending-posts" ? <PendingPostsTab /> : <CoursesTab />}
+        {renderTab()}
       </div>
     </div>
   );

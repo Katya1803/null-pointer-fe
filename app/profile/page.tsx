@@ -126,7 +126,7 @@ export default function UserManagementPage() {
               >
                 Blogs
               </button>
-              <button
+              {/* <button
                 onClick={() => setActiveTab('community')}
                 className={`w-full text-left px-4 py-2 rounded-lg transition-colors mt-2 ${activeTab === 'community'
                     ? 'bg-primary-500 text-white'
@@ -134,7 +134,7 @@ export default function UserManagementPage() {
                   }`}
               >
                 Community
-              </button>
+              </button> */}
             </div>
           </div>
 
